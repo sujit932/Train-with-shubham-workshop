@@ -1,0 +1,803 @@
+
+============================================================
+                 GIT & GITHUB NOTES
+============================================================
+
+
+1. GIT BASICS
+=============
+
+Git is a version control system used to track changes in
+your source code.
+
+GitHub is a cloud platform where Git repositories can be
+stored and shared.
+
+
+2. CREATE / INITIALIZE A GIT REPOSITORY
+=======================================
+
+Go to your project folder:
+
+cd "C:\path\to\project"
+
+Initialize Git:
+
+git init
+
+This creates a hidden .git folder inside your project.
+
+Check Git status:
+
+git status
+
+
+3. CHECK FILES
+==============
+
+List files in PowerShell:
+
+ls
+
+or:
+
+Get-ChildItem
+
+Check Git repository status:
+
+git status
+
+
+4. GIT WORKFLOW
+===============
+
+The basic Git workflow is:
+
+Working Directory
+       |
+       | git add
+       v
+Staging Area
+       |
+       | git commit
+       v
+Local Repository
+       |
+       | git push
+       v
+GitHub Repository
+
+
+Meaning:
+
+git add
+    Working Directory -> Staging Area
+
+git commit
+    Staging Area -> Local Repository
+
+git push
+    Local Repository -> GitHub
+
+git pull
+    GitHub -> Local Repository
+
+
+5. ADD FILE TO STAGING
+======================
+
+Add one file:
+
+git add testing.py
+
+Add all files:
+
+git add .
+
+Check staged files:
+
+git status
+
+
+Example:
+
+git add testing.py
+
+git status
+
+You may see:
+
+Changes to be committed:
+    new file: testing.py
+
+
+6. UNSTAGE A FILE
+=================
+
+Recommended command:
+
+git restore --staged testing.py
+
+This removes the file from staging but keeps the file
+tracked by Git.
+
+Example:
+
+git add testing.py
+
+git restore --staged testing.py
+
+
+IMPORTANT:
+
+There must be NO space between "--" and "cached".
+
+Correct:
+
+git rm --cached testing.py
+
+Incorrect:
+
+git rm -- cached testing.py
+
+
+7. git restore --staged VS git rm --cached
+==========================================
+
+git restore --staged testing.py
+
+    -> Unstage the file.
+    -> File remains tracked by Git.
+    -> Recommended when you accidentally used git add.
+
+
+git rm --cached testing.py
+
+    -> Remove the file from Git tracking.
+    -> Keep the file on your computer.
+    -> Useful when you want Git to stop tracking the file.
+
+
+8. DELETE AND RESTORE A FILE
+============================
+
+Delete a file in PowerShell:
+
+rm .\testing.py
+
+Restore a tracked file:
+
+git restore testing.py
+
+
+9. CONFIGURE GIT USER
+=====================
+
+Before creating a commit, Git needs your name and email.
+
+Set globally:
+
+git config --global user.name "Your Name"
+
+git config --global user.email "your-email@example.com"
+
+
+Example:
+
+git config --global user.name "Sujit"
+
+git config --global user.email "your-email@example.com"
+
+
+Verify:
+
+git config --global user.name
+
+git config --global user.email
+
+
+Without --global:
+
+git config user.name "Your Name"
+
+git config user.email "your-email@example.com"
+
+This applies the configuration only to the current repository.
+
+
+10. CREATE A COMMIT
+===================
+
+Stage files:
+
+git add .
+
+Create commit:
+
+git commit -m "Initial commit"
+
+
+Example:
+
+git commit -m "Add testing.py"
+
+
+Check commit history:
+
+git log --oneline
+
+
+Example output:
+
+a82f123 Initial commit
+
+
+11. CREATE GITHUB REMOTE
+========================
+
+Connect your local repository to GitHub:
+
+git remote add origin https://github.com/USERNAME/REPOSITORY.git
+
+
+Example:
+
+git remote add origin https://github.com/sujit932/Train-with-shubham-workshop.git
+
+
+Check remote:
+
+git remote -v
+
+
+Example:
+
+origin  https://github.com/USERNAME/REPOSITORY.git (fetch)
+origin  https://github.com/USERNAME/REPOSITORY.git (push)
+
+
+12. CHANGE GITHUB REMOTE URL
+============================
+
+If the remote URL is incorrect:
+
+git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
+
+
+Check again:
+
+git remote -v
+
+
+13. CHECK CURRENT BRANCH
+========================
+
+Command:
+
+git branch --show-current
+
+
+Example:
+
+master
+
+
+Other possible branch:
+
+main
+
+
+14. PUSH CODE TO GITHUB
+=======================
+
+If your branch is master:
+
+git push -u origin master
+
+
+If your branch is main:
+
+git push -u origin main
+
+
+The -u option sets the upstream branch.
+
+After using -u once, you can normally use:
+
+git push
+
+
+15. ERROR:
+"src refspec master does not match any"
+==========================================
+
+Example error:
+
+error: src refspec master does not match any
+error: failed to push some refs to 'https://github.com/...'
+
+
+Common reason:
+
+Your master branch does not have a commit yet.
+
+
+Correct sequence:
+
+git add .
+
+git commit -m "Initial commit"
+
+git push -u origin master
+
+
+If Git asks for your identity:
+
+git config --global user.name "Your Name"
+
+git config --global user.email "your-email@example.com"
+
+Then:
+
+git add .
+
+git commit -m "Initial commit"
+
+git push -u origin master
+
+
+16. COMPLETE FIRST-TIME GIT + GITHUB WORKFLOW
+=============================================
+
+Step 1: Go to project folder
+
+cd "C:\path\to\project"
+
+
+Step 2: Initialize Git
+
+git init
+
+
+Step 3: Check status
+
+git status
+
+
+Step 4: Configure Git identity
+
+git config --global user.name "Your Name"
+
+git config --global user.email "your-email@example.com"
+
+
+Step 5: Add files
+
+git add .
+
+
+Step 6: Check staging
+
+git status
+
+
+Step 7: Create commit
+
+git commit -m "Initial commit"
+
+
+Step 8: Add GitHub remote
+
+git remote add origin https://github.com/USERNAME/REPOSITORY.git
+
+
+Step 9: Check branch
+
+git branch --show-current
+
+
+Step 10: Push
+
+git push -u origin master
+
+
+17. DAILY GIT WORKFLOW
+======================
+
+Once Git and GitHub are already configured:
+
+1. Check status
+
+git status
+
+
+2. Make changes to your files.
+
+
+3. Stage changes
+
+git add .
+
+
+4. Check status
+
+git status
+
+
+5. Commit changes
+
+git commit -m "Describe your changes"
+
+
+6. Push to GitHub
+
+git push
+
+
+Typical workflow:
+
+git status
+
+git add .
+
+git status
+
+git commit -m "Update application"
+
+git push
+
+
+18. GET LATEST CODE FROM GITHUB
+===============================
+
+Pull latest changes:
+
+git pull
+
+
+19. CLONE AN EXISTING GITHUB REPOSITORY
+=======================================
+
+If the repository already exists on GitHub:
+
+git clone https://github.com/USERNAME/REPOSITORY.git
+
+
+Then enter the folder:
+
+cd REPOSITORY
+
+
+Check status:
+
+git status
+
+
+20. USEFUL GIT COMMANDS
+=======================
+
+git init
+    Create a new Git repository.
+
+git status
+    Show repository status.
+
+git branch
+    Show local branches.
+
+git branch --show-current
+    Show current branch.
+
+git add file
+    Stage a specific file.
+
+git add .
+    Stage all changes.
+
+git restore --staged file
+    Unstage a file.
+
+git rm --cached file
+    Stop tracking a file while keeping the local copy.
+
+git restore file
+    Restore a tracked file.
+
+git commit -m "message"
+    Create a commit.
+
+git log --oneline
+    Show commit history.
+
+git remote -v
+    Show remote repositories.
+
+git remote add origin URL
+    Add a GitHub remote.
+
+git remote set-url origin URL
+    Change the remote URL.
+
+git push
+    Push commits to GitHub.
+
+git push -u origin master
+    Push master and set upstream.
+
+git pull
+    Get changes from GitHub.
+
+git clone URL
+    Clone a GitHub repository.
+
+
+21. GIT STATUS - IMPORTANT
+==========================
+
+Always use:
+
+git status
+
+It helps you understand:
+
+- Current branch
+- Untracked files
+- Modified files
+- Staged files
+- Unstaged files
+- Files ready to commit
+
+
+22. UNTRACKED VS TRACKED
+========================
+
+Untracked file:
+
+A new file that Git does not know about.
+
+Example:
+
+testing.py
+
+
+After:
+
+git add testing.py
+
+It becomes staged.
+
+
+After:
+
+git commit -m "Add testing.py"
+
+It becomes part of Git history.
+
+
+23. STAGED VS UNSTAGED
+======================
+
+Staged:
+
+git add testing.py
+
+
+Unstage:
+
+git restore --staged testing.py
+
+
+Modified but unstaged:
+
+You changed a file after it was staged or committed.
+
+
+24. COMMIT HISTORY
+==================
+
+Show complete history:
+
+git log
+
+
+Show compact history:
+
+git log --oneline
+
+
+Show latest commits:
+
+git log --oneline -5
+
+
+25. BRANCH BASICS
+=================
+
+Show branches:
+
+git branch
+
+
+Show current branch:
+
+git branch --show-current
+
+
+Create a new branch:
+
+git branch feature-login
+
+
+Switch to a branch:
+
+git checkout feature-login
+
+
+Modern command:
+
+git switch feature-login
+
+
+Create and switch to a new branch:
+
+git switch -c feature-login
+
+
+26. GIT IGNORE
+=============
+
+Use a .gitignore file to prevent files from being tracked.
+
+Example .gitignore:
+
+node_modules/
+.env
+*.log
+__pycache__/
+.vscode/
+
+
+Then:
+
+git add .
+
+Files listed in .gitignore will normally not be added.
+
+
+27. IMPORTANT SECURITY NOTE
+===========================
+
+NEVER expose a GitHub Personal Access Token (PAT).
+
+DO NOT use:
+
+https://ghp_TOKEN@github.com/USERNAME/REPOSITORY.git
+
+
+If a GitHub token has been exposed:
+
+1. Revoke/delete the exposed token in GitHub.
+2. Create a new token only if required.
+3. Remove the token from your Git remote.
+
+
+Set a clean remote URL:
+
+git remote set-url origin https://github.com/USERNAME/REPOSITORY.git
+
+
+Then use Git Credential Manager or another secure authentication
+method.
+
+
+28. MOST IMPORTANT COMMANDS TO REMEMBER
+=======================================
+
+Check status:
+
+git status
+
+
+Stage:
+
+git add .
+
+
+Unstage:
+
+git restore --staged filename
+
+
+Commit:
+
+git commit -m "message"
+
+
+Push:
+
+git push
+
+
+Pull:
+
+git pull
+
+
+Check branch:
+
+git branch --show-current
+
+
+Check GitHub remote:
+
+git remote -v
+
+
+View history:
+
+git log --oneline
+
+
+============================================================
+              QUICK GIT CHEAT SHEET
+============================================================
+
+git init
+    Initialize repository
+
+git status
+    Check status
+
+git add .
+    Stage all files
+
+git restore --staged file
+    Unstage file
+
+git commit -m "message"
+    Create commit
+
+git remote -v
+    Check GitHub remote
+
+git push
+    Push to GitHub
+
+git pull
+    Pull from GitHub
+
+git log --oneline
+    View commit history
+
+git branch --show-current
+    Check current branch
+
+
+============================================================
+                    GOLDEN RULE
+============================================================
+
+                    git add
+                       |
+                       v
+                 STAGING AREA
+                       |
+                  git commit
+                       |
+                       v
+               LOCAL REPOSITORY
+                       |
+                   git push
+                       |
+                       v
+                     GITHUB
+
+
+Remember:
+
+ADD     = Prepare changes
+COMMIT  = Save changes locally
+PUSH    = Send changes to GitHub
+PULL    = Get changes from GitHub
+============================================================
+```

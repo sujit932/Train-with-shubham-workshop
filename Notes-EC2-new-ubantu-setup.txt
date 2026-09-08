@@ -1,0 +1,624 @@
+from pathlib import Path
+
+content = """UBUNTU EC2 SERVER - INITIAL SETUP & COMMON COMMANDS
+========================================================
+
+Purpose:
+This file contains commonly used Ubuntu server commands for initial
+EC2 setup, system checks, package management, users, networking,
+services, files, logs, Python, Git, and troubleshooting.
+
+IMPORTANT:
+- These commands are intended for an Ubuntu EC2 server.
+- Run commands with sudo only when required.
+- Review commands such as rm, chmod, chown, and firewall changes
+  before executing them on a production server.
+- Ubuntu uses APT (apt/apt-get), NOT yum.
+
+--------------------------------------------------------
+1. CONFIRM OPERATING SYSTEM
+--------------------------------------------------------
+
+# Check Ubuntu/Linux distribution
+cat /etc/os-release
+
+# Check kernel information
+uname -a
+
+# Check hostname
+hostname
+
+# Check current user
+whoami
+
+# Check current directory
+pwd
+
+--------------------------------------------------------
+2. UPDATE UBUNTU SERVER
+--------------------------------------------------------
+
+# Refresh package information
+sudo apt update
+
+# Upgrade installed packages
+sudo apt upgrade -y
+
+# Optional: remove packages that are no longer required
+sudo apt autoremove -y
+
+# Check whether a reboot is required
+[ -f /var/run/reboot-required ] && echo "Reboot required" || echo "No reboot required"
+
+--------------------------------------------------------
+3. INSTALL BASIC UTILITIES
+--------------------------------------------------------
+
+# Install commonly used tools
+sudo apt install -y git curl wget unzip zip vim nano tree net-tools htop
+
+# Verify installations
+git --version
+curl --version
+wget --version
+vim --version
+htop --version
+
+--------------------------------------------------------
+4. CHECK SERVER RESOURCES
+--------------------------------------------------------
+
+# Check CPU information
+nproc
+lscpu
+
+# Check RAM usage
+free -h
+
+# Check disk usage
+df -h
+
+# Check mounted filesystems
+lsblk
+
+# Check directory size
+du -sh .
+
+# Check top CPU-consuming processes
+ps aux --sort=-%cpu | head
+
+# Check top memory-consuming processes
+ps aux --sort=-%mem | head
+
+--------------------------------------------------------
+5. FILE AND DIRECTORY COMMANDS
+--------------------------------------------------------
+
+# List files including hidden files
+ls -la
+
+# Create a directory
+mkdir myproject
+
+# Create nested directories
+mkdir -p ~/projects/myproject
+
+# Move into a directory
+cd ~/projects/myproject
+
+# Go to home directory
+cd ~
+
+# Go to parent directory
+cd ..
+
+# Create an empty file
+touch example.txt
+
+# View a file
+cat example.txt
+
+# View a large file page by page
+less example.txt
+
+# Copy a file
+cp example.txt example_backup.txt
+
+# Move/rename a file
+mv example.txt example_new.txt
+
+# Remove a file - USE CAREFULLY
+rm example_new.txt
+
+# Remove an empty directory
+rmdir myproject
+
+# List directory structure
+tree
+
+--------------------------------------------------------
+6. SEARCHING FILES AND TEXT
+--------------------------------------------------------
+
+# Find a file by name
+find ~ -name "example.txt"
+
+# Find all .log files
+find /var/log -name "*.log"
+
+# Search text inside a file
+grep "ERROR" application.log
+
+# Case-insensitive search
+grep -i "error" application.log
+
+# Search recursively inside a directory
+grep -R "ERROR" ~/projects
+
+--------------------------------------------------------
+7. FILE PERMISSIONS
+--------------------------------------------------------
+
+# View permissions
+ls -l
+
+# Add execute permission
+chmod +x script.sh
+
+# Set common script permission
+chmod 755 script.sh
+
+# Change file owner
+sudo chown ubuntu:ubuntu example.txt
+
+# Change directory owner recursively - USE CAREFULLY
+sudo chown -R ubuntu:ubuntu ~/myproject
+
+# Numeric permission example:
+# 755 = owner: read/write/execute
+#       group: read/execute
+#       others: read/execute
+#
+# 644 = owner: read/write
+#       group: read
+#       others: read
+
+--------------------------------------------------------
+8. PACKAGE MANAGEMENT WITH APT
+--------------------------------------------------------
+
+# Search for a package
+apt search package_name
+
+# Install a package
+sudo apt install -y package_name
+
+# Remove a package
+sudo apt remove package_name
+
+# Show installed package information
+apt show package_name
+
+# List installed packages
+apt list --installed
+
+# Update package index
+sudo apt update
+
+NOTE:
+Do NOT use:
+sudo yum update -y
+
+On Ubuntu, use:
+sudo apt update
+sudo apt upgrade -y
+
+--------------------------------------------------------
+9. PYTHON SETUP
+--------------------------------------------------------
+
+# Check Python
+python3 --version
+
+# Install Python and common development tools
+sudo apt install -y python3 python3-pip python3-venv
+
+# Verify pip
+pip3 --version
+
+# Create a project directory
+mkdir -p ~/projects/python-app
+cd ~/projects/python-app
+
+# Create a Python virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Upgrade pip inside virtual environment
+python -m pip install --upgrade pip
+
+# Install a Python package
+pip install requests
+
+# Check installed packages
+pip list
+
+# Deactivate virtual environment
+deactivate
+
+--------------------------------------------------------
+10. GIT SETUP
+--------------------------------------------------------
+
+# Check Git
+git --version
+
+# Configure Git username
+git config --global user.name "Your Name"
+
+# Configure Git email
+git config --global user.email "your-email@example.com"
+
+# Clone a repository
+git clone <repository-url>
+
+# Check repository status
+git status
+
+# Pull latest code
+git pull
+
+# Create a new branch
+git checkout -b feature/my-feature
+
+--------------------------------------------------------
+11. PROCESS MANAGEMENT
+--------------------------------------------------------
+
+# Show running processes
+ps aux
+
+# Search for a process
+ps aux | grep python
+
+# Monitor processes interactively
+htop
+
+# Find process by name
+pgrep -a python
+
+# Stop a process by PID - USE CAREFULLY
+kill <PID>
+
+# Force stop a process - USE ONLY IF NECESSARY
+kill -9 <PID>
+
+--------------------------------------------------------
+12. SERVICES WITH SYSTEMD
+--------------------------------------------------------
+
+# Check service status
+sudo systemctl status <service-name>
+
+# Start a service
+sudo systemctl start <service-name>
+
+# Stop a service
+sudo systemctl stop <service-name>
+
+# Restart a service
+sudo systemctl restart <service-name>
+
+# Enable service at boot
+sudo systemctl enable <service-name>
+
+# Disable service at boot
+sudo systemctl disable <service-name>
+
+# List failed services
+systemctl --failed
+
+Example:
+sudo systemctl status ssh
+
+--------------------------------------------------------
+13. NETWORKING
+--------------------------------------------------------
+
+# Show IP addresses
+ip addr
+
+# Show routing table
+ip route
+
+# Check hostname/IP
+hostname -I
+
+# Test internet connectivity
+ping -c 4 8.8.8.8
+
+# Test DNS resolution
+ping -c 4 google.com
+
+# Check DNS configuration
+resolvectl status
+
+# Check listening ports
+sudo ss -tulpn
+
+# Check a specific port
+sudo ss -tulpn | grep :8080
+
+# Test a local HTTP endpoint
+curl http://localhost:8080
+
+--------------------------------------------------------
+14. UBUNTU FIREWALL (UFW)
+--------------------------------------------------------
+
+# Check firewall status
+sudo ufw status
+
+# Enable firewall - REVIEW RULES FIRST
+sudo ufw enable
+
+# Allow SSH
+sudo ufw allow 22/tcp
+
+# Allow HTTP
+sudo ufw allow 80/tcp
+
+# Allow HTTPS
+sudo ufw allow 443/tcp
+
+# Allow a custom application port
+sudo ufw allow 8080/tcp
+
+IMPORTANT:
+For AWS EC2, inbound traffic is also controlled by the EC2
+Security Group. Opening a port in UFW alone does not make it
+reachable from the internet.
+
+--------------------------------------------------------
+15. SSH
+--------------------------------------------------------
+
+# Connect from your local machine
+ssh -i /path/to/key.pem ubuntu@<EC2-PUBLIC-IP>
+
+# Fix private key permissions on your local Linux/macOS machine
+chmod 400 key.pem
+
+# Check SSH service on Ubuntu
+sudo systemctl status ssh
+
+--------------------------------------------------------
+16. ENVIRONMENT VARIABLES
+--------------------------------------------------------
+
+# Display environment variables
+env
+
+# Display PATH
+echo $PATH
+
+# Set a temporary environment variable
+export APP_ENV=dev
+
+# Check variable
+echo $APP_ENV
+
+NOTE:
+export changes apply to the current shell session.
+For persistent configuration, use a suitable shell profile or
+application/service configuration.
+
+--------------------------------------------------------
+17. LOGS
+--------------------------------------------------------
+
+# View system journal
+sudo journalctl
+
+# View recent logs
+sudo journalctl -n 100
+
+# Follow logs live
+sudo journalctl -f
+
+# Logs for a specific service
+sudo journalctl -u <service-name>
+
+# View common Ubuntu log directory
+ls -lah /var/log
+
+# Follow an application log
+tail -f application.log
+
+# Last 100 lines
+tail -n 100 application.log
+
+--------------------------------------------------------
+18. DISK CLEANUP
+--------------------------------------------------------
+
+# Check disk usage
+df -h
+
+# Find large directories from current location
+du -h --max-depth=1 | sort -h
+
+# Clean APT cache
+sudo apt clean
+
+# Remove unused packages
+sudo apt autoremove -y
+
+IMPORTANT:
+Do not blindly delete files from /var, /usr, /etc, or system
+directories. Check what a file is before deleting it.
+
+--------------------------------------------------------
+19. DATE AND TIME
+--------------------------------------------------------
+
+# Show current date/time
+date
+
+# Show timezone
+timedatectl
+
+# Show system time configuration
+timedatectl status
+
+--------------------------------------------------------
+20. USER MANAGEMENT
+--------------------------------------------------------
+
+# Show current user
+whoami
+
+# Show logged-in users
+who
+
+# Add a new user
+sudo adduser <username>
+
+# Add user to sudo group
+sudo usermod -aG sudo <username>
+
+# Check user's groups
+groups <username>
+
+# Switch user
+su - <username>
+
+--------------------------------------------------------
+21. SYSTEM REBOOT / SHUTDOWN
+--------------------------------------------------------
+
+# Reboot server - USE CAREFULLY
+sudo reboot
+
+# Shut down server - USE CAREFULLY
+sudo shutdown now
+
+IMPORTANT:
+Before rebooting a production EC2 instance, confirm that
+applications can restart automatically and that no active work
+will be interrupted.
+
+--------------------------------------------------------
+22. USEFUL AWS EC2 CHECKS
+--------------------------------------------------------
+
+# Check private IP
+hostname -I
+
+# Check network interfaces
+ip addr
+
+# Check listening application ports
+sudo ss -tulpn
+
+# Check disk
+df -h
+
+# Check memory
+free -h
+
+# Check CPU
+nproc
+
+IMPORTANT:
+AWS EC2 Security Groups act as a network firewall around the
+instance. Make sure required inbound/outbound rules are configured
+in AWS in addition to any Ubuntu firewall configuration.
+
+--------------------------------------------------------
+23. RECOMMENDED INITIAL EC2 SETUP
+--------------------------------------------------------
+
+For a new Ubuntu EC2 instance, a reasonable first setup is:
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y git curl wget unzip vim nano htop tree
+sudo apt install -y python3 python3-pip python3-venv
+
+Then verify:
+
+cat /etc/os-release
+whoami
+hostname
+python3 --version
+git --version
+free -h
+df -h
+ip addr
+sudo ss -tulpn
+
+--------------------------------------------------------
+24. QUICK TROUBLESHOOTING
+--------------------------------------------------------
+
+Problem: "sudo: yum: command not found"
+Solution:
+Ubuntu uses APT.
+
+Use:
+sudo apt update
+sudo apt upgrade -y
+
+Problem: Port is not accessible
+Check:
+sudo ss -tulpn
+
+Then verify:
+1. Application is running.
+2. Application is listening on the expected port.
+3. Ubuntu UFW allows the port, if UFW is enabled.
+4. AWS EC2 Security Group allows inbound traffic.
+5. AWS Network ACL/routing configuration is correct if applicable.
+
+Problem: Permission denied
+Check:
+ls -l <file>
+whoami
+groups
+
+Problem: Disk full
+Check:
+df -h
+du -h --max-depth=1 | sort -h
+
+Problem: Service is not running
+Check:
+sudo systemctl status <service-name>
+sudo journalctl -u <service-name> -n 100
+
+--------------------------------------------------------
+25. COMMAND SAFETY NOTES
+--------------------------------------------------------
+
+Be especially careful with:
+
+sudo rm -rf
+sudo chmod -R
+sudo chown -R
+sudo systemctl stop
+sudo systemctl disable
+sudo reboot
+sudo shutdown
+
+Always verify the target path, service name, and impact before
+executing destructive or system-level commands.
+
+END OF UBUNTU EC2 COMMAND REFERENCE
+"""
+
+path = Path("/mnt/data/Ubuntu_EC2_Server_Commands.txt")
+path.write_text(content, encoding="utf-8")
+print(path)
